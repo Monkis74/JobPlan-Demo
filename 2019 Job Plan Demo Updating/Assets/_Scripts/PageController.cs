@@ -377,6 +377,10 @@ public class PageController : MonoBehaviour
         foreach (GetDate thisdate in date) {
             thisdate.ResetDate();
         }
+        TimeStampID[] timeStamps = Resources.FindObjectsOfTypeAll<TimeStampID>(); // reset the time stamps to blank
+        foreach (TimeStampID thisStamp in timeStamps) {
+            thisStamp.GetComponent<Text>().text = "";
+        }
         //date[0].ResetDate();
 
         ChosenLayout[] myLayout = Resources.FindObjectsOfTypeAll<ChosenLayout>();

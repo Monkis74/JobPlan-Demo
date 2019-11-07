@@ -180,7 +180,7 @@ public class OnScreenKeyboard : MonoBehaviour {
         }
 
         isActive = b;
-        Debug.Log("SetActive Is Active = " + isActive);
+        //Debug.Log("SetActive Is Active = " + isActive);
     }
 
     public void SetCaps(bool b)

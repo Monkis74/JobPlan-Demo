@@ -82,7 +82,7 @@ public class GetTime : MonoBehaviour {
     public void CheckTimeGroup() {
         if (timeGroup.Length < 1) {
             isTimeFinished = true;
-            Debug.Log("timeGroup is null");
+           // Debug.Log("timeGroup is null");
             return;
         }
         string time1;
@@ -103,7 +103,7 @@ public class GetTime : MonoBehaviour {
             }
             if (timeGroup[2].GetComponent<CSEPNumberID>() != null) {
                 name1 = timeGroup[2].GetComponent<Text>().text;
-                Debug.Log(name1);
+               // Debug.Log(name1);
             }
             
             GameObject parentPage = timeGroup[3].gameObject;

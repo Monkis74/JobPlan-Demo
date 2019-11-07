@@ -81,7 +81,7 @@ public class SignatureWriter : MonoBehaviour {
             myTrail.GetPositions(positionsArray);
             for (int i = 0; i < myTrail.positionCount; i++)
             {
-                Debug.Log(positionsArray[i]);
+               // Debug.Log(positionsArray[i]);
 
             }
 

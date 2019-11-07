@@ -23,6 +23,7 @@ public class SignatureID : MonoBehaviour
     public int numOfSigs;
     SignatureID[] amount;
     public bool isTaken = false;
+    TimeStampID myStamp; // Find the time stamp game object tied to this signature for setting.
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class SignatureID : MonoBehaviour
     {
         amount = FindObjectsOfType<SignatureID>();
         numOfSigs = amount.Length;
+        myStamp = GetComponentInChildren<TimeStampID>();
 
     }
 
@@ -76,6 +78,10 @@ public class SignatureID : MonoBehaviour
         //Debug.Log(bytesString);
         myButton.SetActive(false);
         myTex = null;
+        if (myStamp != null && SaveFile.loadedFile != true)
+        {
+            myStamp.SetStamp();
+        }
     }
 
     public void ConvertStringToTexture(string imageString)

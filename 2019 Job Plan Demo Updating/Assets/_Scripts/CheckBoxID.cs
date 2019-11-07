@@ -8,7 +8,7 @@ public class CheckBoxID : MonoBehaviour, IUpdateSelectedHandler {
 
     // provide a unique id number to reference the checkboxes for saving and loading behaviours.
 
-    public int objID; // actual object id of checkbox
+    public int objID; // actual object id of this checkbox
     public int numOfCb; // total number of checkboxes in the project
     public CheckBoxID[] amount; // array of all the checkboxes
     public bool isTaken = false; // check if the number of this objID is already assigned

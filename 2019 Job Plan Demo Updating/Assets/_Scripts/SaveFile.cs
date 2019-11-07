@@ -37,6 +37,7 @@ public class SaveFile : MonoBehaviour {
     public DropdownID[] dropdowns; // aray of all the dropdowns
     public GetDate[] date; // array of all the date objects
     public TimeID[] times; // arra of all the time objects
+    public TimeStampID[] timeStamps; // array of all the time stamp objects
     public ChosenLayout[] myLayout; // array of the one layoutimage, used to be able to find wen disabled.
     public SignOffID[] signOffs; // array of the supervisor sign offs 
     public List<CSEPNumberID> CSEPList = new List<CSEPNumberID>(); // sorted list of csep numbers;
@@ -60,6 +61,7 @@ public class SaveFile : MonoBehaviour {
 
     void Start() {
         sharepointPath = PlayerPrefs.GetString(SHAREPOINT_PATH);
+        UnityEngine.Debug.Log("Sharepointpath is " + sharepointPath);
         //if (sharepointPath == null || sharepointPath == "") {
         //    SetSharepointPath();
         //}
@@ -83,6 +85,7 @@ public class SaveFile : MonoBehaviour {
         sigimages = Resources.FindObjectsOfTypeAll<SignatureID>();
         dropdowns = Resources.FindObjectsOfTypeAll<DropdownID>();
         times = Resources.FindObjectsOfTypeAll<TimeID>();
+        timeStamps = Resources.FindObjectsOfTypeAll<TimeStampID>();
         date = Resources.FindObjectsOfTypeAll<GetDate>();
         myLayout = Resources.FindObjectsOfTypeAll<ChosenLayout>();
         signOffs = Resources.FindObjectsOfTypeAll<SignOffID>();
@@ -571,7 +574,7 @@ public class SaveFile : MonoBehaviour {
 
         if (!savingTemplate)
         {
-            for (int i = 0; i < data.timestring.Length; i++) // serialize all the dropdown selected value as int
+            for (int i = 0; i < data.timestring.Length; i++) // serialize all the time pickers strings.
             {
                 foreach (TimeID thisTime in times)
                 {
@@ -581,6 +584,20 @@ public class SaveFile : MonoBehaviour {
                     }
                 }
             }
+
+            for (int i = 0; i < data.timeStampString.Length; i++)
+            {
+                foreach (TimeStampID thisStamp in timeStamps)
+                {
+                   // UnityEngine.Debug.Log("ThisStamp ID # = " + thisStamp.objID + " i = " + i);
+                    if (thisStamp.objID == i + 1)
+                    {
+                        data.timeStampString[i] = thisStamp.GetComponent<Text>().text;
+                       // UnityEngine.Debug.Log("Save timestamp string #" + i + " = " + data.timeStampString[i]);
+                    }
+                }
+            }
+
         }
         if (!savingTemplate)
         {
@@ -774,6 +791,23 @@ public class SaveFile : MonoBehaviour {
                     }
                 }
             }
+            if (data.timeStampString != null)
+            {
+                for (int i = 0; i < data.timeStampString.Length; i++)
+                {
+                    foreach (TimeStampID thisStamp in timeStamps)
+                    {
+                        if (thisStamp.objID == i + 1 && data.timeStampString[i] != null)
+                        {
+                            UnityEngine.Debug.Log("Timestamp #" + thisStamp.objID);
+                            thisStamp.GetComponent<Text>().text = data.timeStampString[i];
+                           
+                        }
+                    }
+                }
+            }
+
+
             if (data.trafficLayout != null)
             {
                 myLayout[0].ConvertStringToTexture(data.trafficLayout); // there is only one layout element
@@ -848,6 +882,7 @@ public class SaveFile : MonoBehaviour {
         public string[] dropdownString;
         public string[] timestring;
         public string[] datestring;
+        public string[] timeStampString;
         public string trafficLayout;
         public string emergencyDateTime;
         public bool isEmergency;
@@ -856,8 +891,10 @@ public class SaveFile : MonoBehaviour {
         public bool isCSEP2;
         public string CSEP2Number;
 
-        public SaveData()
+        public SaveData() 
         {
+            // Initialize all the data arrays for saving data to them;
+
             inputText = new string[Resources.FindObjectsOfTypeAll<InputFieldID>().Length];
             checkboxstate = new bool[Resources.FindObjectsOfTypeAll<CheckBoxID>().Length];
             sigbytes = new string[Resources.FindObjectsOfTypeAll<SignatureID>().Length];
@@ -865,9 +902,11 @@ public class SaveFile : MonoBehaviour {
             timestring = new string[Resources.FindObjectsOfTypeAll<TimeID>().Length];
             datestring = new string[Resources.FindObjectsOfTypeAll<GetDate>().Length];
             dropdownString = new string[Resources.FindObjectsOfTypeAll<DropdownID>().Length];
+            timeStampString = new string[Resources.FindObjectsOfTypeAll<TimeStampID>().Length];
             
         }
-       
+
+           
 
 
     }
