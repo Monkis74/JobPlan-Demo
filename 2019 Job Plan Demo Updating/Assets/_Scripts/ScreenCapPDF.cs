@@ -333,6 +333,40 @@ public class ScreenCapPDF : MonoBehaviour {
         if (File.Exists(pdfSaveDir + "/" + pdfName + ".pdf"))
         {
             yield return new WaitForSeconds(1f);
+
+            /// ### /// Create a log file to compare old syncs to beyond sharepoints 3 month sync.
+            string logPath = SaveFile.sharepointPath + "/Job Plans/Log/";
+            if (!Directory.Exists(logPath))
+            {
+                Directory.CreateDirectory(logPath);
+            }
+            if (!File.Exists(logPath + "SignedPlanLog.txt"))
+            {
+                var newFile = File.Create(logPath + "SignedPlanLog.txt");
+                newFile.Close();
+            }
+            bool _isDuplicate = false;
+            string logLine;
+            StreamReader logFile = new StreamReader(logPath + "SignedPlanLog.txt");
+            while ((logLine = logFile.ReadLine()) != null)
+            {
+                if (logLine == pdfName + ".dat")
+                {
+                    Debug.Log("Duplicate entry not created");
+                    _isDuplicate = true;
+                    break;   
+                }
+            }
+            logFile.Close();
+            if (!_isDuplicate)
+            {
+                using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter(logPath + "SignedPlanLog.txt", true))
+                {
+                    file.WriteLine(pdfName + ".dat");
+                }
+            }
+            /// ### ///
             File.Delete(saveFile.loadedFilePath);
             PdfCreationPanel.SetActive(false);
             ViewPdfPanel.SetActive(true);

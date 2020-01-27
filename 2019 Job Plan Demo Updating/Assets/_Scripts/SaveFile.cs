@@ -28,6 +28,7 @@ public class SaveFile : MonoBehaviour {
     public GameObject loadFileButton; // the button to poulate the load file list with
     public GameObject errorPanel; // the panel to catch errors with saving and loading files.
     public GameObject pathPanel;
+    public GameObject checkSyncFilesPanel;
     public GameObject foremanReminderPanel; // the panel to remind to select a forman name during submission.
     public GameObject supervisorReminderPanel; // the panel to remind to select a spervisor during submission.
     public GameObject SavingErrorPanel; // panel that appears when a file did not get created during a save/submission.
@@ -141,8 +142,18 @@ public class SaveFile : MonoBehaviour {
         PlayerPrefs.SetString(SHAREPOINT_PATH, sharepointPath);
         //Destroy(GameObject.Find("Canvas/PathPanel").gameObject);
         DestroyPanel();
+        }
 
+    public void OpenCheckSyncFilesPanel()
+    {
+        Transform myParent = GameObject.Find("Canvas").transform;
+        GameObject CheckSyncFilesPanel = Instantiate(checkSyncFilesPanel) as GameObject;
+        CheckSyncFilesPanel.transform.SetParent(myParent, false);
+        CheckSyncFilesPanel.transform.localScale = new Vector3(1, 1, 1);
+        CheckSyncFilesPanel.name = "CheckSyncFilesPanel";
+        CheckSyncFilesPanel.SetActive(true);
     }
+
     public void SetDataPath(string myPath) { 
         dataPath = myPath;
         if (!Directory.Exists(dataPath))

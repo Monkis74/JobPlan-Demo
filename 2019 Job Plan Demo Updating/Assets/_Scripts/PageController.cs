@@ -36,6 +36,8 @@ public class PageController : MonoBehaviour
     public GameObject viewCSEP2Button;
     public Text myText;
     public GameObject finishSignOffButton;
+    string username;
+
     
 
 
@@ -44,6 +46,8 @@ public class PageController : MonoBehaviour
     // Use this for initialization
     void Start()
     {   
+        username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+        UnityEngine.Debug.Log("Username is " + username);
         supervisorSignOff = Resources.FindObjectsOfTypeAll<SignOffID>();
         welcomePanel = GameObject.FindGameObjectWithTag("WelcomePanel");
         finishPanel = GameObject.FindGameObjectWithTag("FinishPanel");
