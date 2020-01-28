@@ -136,11 +136,8 @@ public class SaveFile : MonoBehaviour {
         inputSharePointText = GameObject.Find("Canvas/PathPanel/SharePointInputField");
         sharepointPath = inputSharePointText.GetComponent<InputField>().text;
         displaySharepointText = GameObject.Find("Canvas/PathPanel/CurrentPath").GetComponent<Text>();
-
         displaySharepointText.text = "Current Sharepoint Path Is: " + PlayerPrefs.GetString(SHAREPOINT_PATH);
-        
         PlayerPrefs.SetString(SHAREPOINT_PATH, sharepointPath);
-        //Destroy(GameObject.Find("Canvas/PathPanel").gameObject);
         DestroyPanel();
         }
 

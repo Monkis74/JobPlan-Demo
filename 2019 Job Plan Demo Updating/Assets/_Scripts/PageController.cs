@@ -33,10 +33,11 @@ public class PageController : MonoBehaviour
     public GameObject createCSEPButton;
     public GameObject viewCSEPButton;
     public GameObject createCSEP2Button;
-    public GameObject viewCSEP2Button;
+    public GameObject viewCSEP2Button;    
     public Text myText;
     public GameObject finishSignOffButton;
     string username;
+
 
     
 
@@ -405,6 +406,9 @@ public class PageController : MonoBehaviour
         System.GC.Collect();
 
     }
+
+    
+    
 
 }
   

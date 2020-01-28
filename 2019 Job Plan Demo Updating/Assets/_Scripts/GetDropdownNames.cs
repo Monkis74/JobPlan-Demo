@@ -11,24 +11,19 @@ public class GetDropdownNames : MonoBehaviour {
     List<string> namesList = new List<string>();
     List<string> truckList = new List<string>();
     List<string> superList = new List<string>();
-    List<string> feederList = new List<string>();
-    
+    List<string> feederList = new List<string>();    
     string sharepointPath;
-
     string path;
     Dropdown myDropdown;
-    
 
 	// Use this for initialization
-	void Start () {
+	 void Start()
+    {
         sharepointPath = SaveFile.sharepointPath;
-        // Debug.Log("DROPDOWNS SHAREPATH " + sharepointPath);
-
+        myDropdown = this.gameObject.GetComponent<Dropdown>();
         if (!File.Exists(sharepointPath + "/Job Plans/FormData/CrewNames.txt")) {
             return;
-        }
-
-
+        }        
         if (gameObject.CompareTag("Names"))
         {
             //path = "C://JobPlanTempFiles/CrewNames.txt";
@@ -38,11 +33,10 @@ public class GetDropdownNames : MonoBehaviour {
             {
                 namesList.Add(s);
             }
-            myDropdown = this.gameObject.GetComponent<Dropdown>();
+            //myDropdown = this.gameObject.GetComponent<Dropdown>();
             myDropdown.AddOptions(namesList);
             readText = null;
         }
-
         if (gameObject.CompareTag("Trucks")) {
             // path = "C://JobPlanTempFiles/TruckNumbers.txt";
             path = sharepointPath + "/Job Plans/FormData/TruckNumbers.txt";
@@ -51,11 +45,10 @@ public class GetDropdownNames : MonoBehaviour {
             {
                 truckList.Add(s);
             }
-            myDropdown = this.gameObject.GetComponent<Dropdown>();
+            //myDropdown = this.gameObject.GetComponent<Dropdown>();
             myDropdown.AddOptions(truckList);
             readText = null;
         }
-
         if (gameObject.CompareTag("Supervisor"))
         {
             //path = "C://JobPlanTempFiles/Supervisors.txt";
@@ -65,7 +58,7 @@ public class GetDropdownNames : MonoBehaviour {
             {
                 superList.Add(s);
             }
-            myDropdown = this.gameObject.GetComponent<Dropdown>();
+            //myDropdown = this.gameObject.GetComponent<Dropdown>();
             myDropdown.AddOptions(superList);
             readText = null;
         }
@@ -78,7 +71,7 @@ public class GetDropdownNames : MonoBehaviour {
             {
                 feederList.Add(s);
             }
-            myDropdown = this.gameObject.GetComponent<Dropdown>();
+            //myDropdown = this.gameObject.GetComponent<Dropdown>();
             myDropdown.AddOptions(feederList);
             readText = null;
 
@@ -96,7 +89,7 @@ public class GetDropdownNames : MonoBehaviour {
             {                
                 feederList.Add(s);
             }
-            myDropdown = this.gameObject.GetComponent<Dropdown>();
+           // myDropdown = this.gameObject.GetComponent<Dropdown>();
             myDropdown.AddOptions(feederList);
             readText = null;
         }
@@ -108,7 +101,7 @@ public class GetDropdownNames : MonoBehaviour {
             {
                 feederList.Add(s);
             }
-            myDropdown = this.gameObject.GetComponent<Dropdown>();
+           // myDropdown = this.gameObject.GetComponent<Dropdown>();
             myDropdown.AddOptions(feederList);
             readText = null;
         }

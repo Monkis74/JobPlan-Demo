@@ -121,18 +121,19 @@ public class OBJIDController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    //void Update () {
-    //    maxDD = (int)MaxDropdownID();
-    //    ddTExt.text = "Highest DD:" + (maxDD.ToString()) + "/" + alldropdowns.Length.ToString() ;
-        
-    //    maxCB = (int)MaxCBID();
-    //    cbText.text = "Highest CB:" + (maxCB.ToString()) + "/" + allcbs.Length.ToString();
-    //    maxIF = (int)MaxIFID();
-    //    ifText.text = "Highest IF:" + (maxIF.ToString()) + "/" + allifs.Length.ToString();
-    //    maxTimes = (int)MaxTimeID();
-    //    timeText.text = "Higest TimeID:" + (maxTimes.ToString()) + "/" + alltimes.Length.ToString();
-    //    maxDates = (int)MaxDateID();
-    //    dateText.text = "Highest DateID:" + (maxDates.ToString()) + "/" + alldates.Length.ToString();
+    void Update()
+    {
+        maxDD = (int)MaxDropdownID();
+        ddTExt.text = "Highest DD:" + (maxDD.ToString()) + "/" + alldropdowns.Length.ToString();
 
-    //}
+        maxCB = (int)MaxCBID();
+        cbText.text = "Highest CB:" + (maxCB.ToString()) + "/" + allcbs.Length.ToString();
+        maxIF = (int)MaxIFID();
+        ifText.text = "Highest IF:" + (maxIF.ToString()) + "/" + allifs.Length.ToString();
+        maxTimes = (int)MaxTimeID();
+        timeText.text = "Higest TimeID:" + (maxTimes.ToString()) + "/" + alltimes.Length.ToString();
+        maxDates = (int)MaxDateID();
+        dateText.text = "Highest DateID:" + (maxDates.ToString()) + "/" + alldates.Length.ToString();
+
+    }
 }
