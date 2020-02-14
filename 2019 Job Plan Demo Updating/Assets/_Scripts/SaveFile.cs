@@ -27,8 +27,8 @@ public class SaveFile : MonoBehaviour {
     public GameObject savedFileButton; // the button to populate the save file list with
     public GameObject loadFileButton; // the button to poulate the load file list with
     public GameObject errorPanel; // the panel to catch errors with saving and loading files.
-    public GameObject pathPanel;
-    public GameObject checkSyncFilesPanel;
+    public GameObject pathPanel; // Panel to set location of shared drive (sharepoint or onedrive etc...)
+    public GameObject checkSyncFilesPanel; // panel to manual check if late submitted files have already been signed off by comparing against log.
     public GameObject foremanReminderPanel; // the panel to remind to select a forman name during submission.
     public GameObject supervisorReminderPanel; // the panel to remind to select a spervisor during submission.
     public GameObject SavingErrorPanel; // panel that appears when a file did not get created during a save/submission.
@@ -60,7 +60,8 @@ public class SaveFile : MonoBehaviour {
     Text displaySharepointText;
     public bool fileisSaved = false;
 
-    void Start() {
+    void Start()
+    {
         sharepointPath = PlayerPrefs.GetString(SHAREPOINT_PATH);
         UnityEngine.Debug.Log("Sharepointpath is " + sharepointPath);
         //if (sharepointPath == null || sharepointPath == "") {
@@ -75,12 +76,11 @@ public class SaveFile : MonoBehaviour {
         deletePanel.SetActive(false);
         deleteConfirmPanel.SetActive(false);
         errorPanel.SetActive(false);
-        SavingErrorPanel.SetActive(false);
-
-        
- 
+        SavingErrorPanel.SetActive(false);   
     }
-    public void GetArrays() {
+
+    public void GetArrays()
+    {
         checkBoxes = Resources.FindObjectsOfTypeAll<CheckBoxID>();
         inputfields = Resources.FindObjectsOfTypeAll<InputFieldID>();
         sigimages = Resources.FindObjectsOfTypeAll<SignatureID>();
@@ -103,7 +103,8 @@ public class SaveFile : MonoBehaviour {
         }
     }
 
-    public void KillArrays() {
+    public void KillArrays()
+    {
         checkBoxes = null;
         inputfields = null;
         sigimages = null;
@@ -121,7 +122,8 @@ public class SaveFile : MonoBehaviour {
     // Submitted plans are in C:\\SharePoint\Operations - Documents\Job Plans\SubmittedPlans
 
     // set the data path for all save / load / delete panel files to populate 
-    public void OpenSharePointPath() {
+    public void OpenSharePointPath()
+    {
         Transform myParent = GameObject.Find("Canvas").transform;
         GameObject PathPanel = Instantiate(pathPanel) as GameObject;
         PathPanel.transform.SetParent(myParent, false);
@@ -132,14 +134,15 @@ public class SaveFile : MonoBehaviour {
         displaySharepointText.text = "Current Sharepoint Path Is: " + PlayerPrefs.GetString(SHAREPOINT_PATH);
     }
 
-    public void SetSharepointPath() {
+    public void SetSharepointPath()
+    {
         inputSharePointText = GameObject.Find("Canvas/PathPanel/SharePointInputField");
         sharepointPath = inputSharePointText.GetComponent<InputField>().text;
         displaySharepointText = GameObject.Find("Canvas/PathPanel/CurrentPath").GetComponent<Text>();
         displaySharepointText.text = "Current Sharepoint Path Is: " + PlayerPrefs.GetString(SHAREPOINT_PATH);
         PlayerPrefs.SetString(SHAREPOINT_PATH, sharepointPath);
         DestroyPanel();
-        }
+     }
 
     public void OpenCheckSyncFilesPanel()
     {
@@ -151,7 +154,8 @@ public class SaveFile : MonoBehaviour {
         CheckSyncFilesPanel.SetActive(true);
     }
 
-    public void SetDataPath(string myPath) { 
+    public void SetDataPath(string myPath)
+    { 
         dataPath = myPath;
         if (!Directory.Exists(dataPath))
         {
@@ -159,18 +163,15 @@ public class SaveFile : MonoBehaviour {
             Directory.CreateDirectory(dataPath);
         }       
     }
-    public void SetSubmissionPath(string myPath) {
+    public void SetSubmissionPath(string myPath)
+    {
         ContinuousSaveController.continuousSaveActive = false;
         sharepointPath = PlayerPrefs.GetString(SHAREPOINT_PATH);
         dataPath = sharepointPath + myPath;
        
-        //if (Application.isEditor) {
-        //    dataPath = "C:\\JobPlanTestSubmition";
-        //}
         if (!Directory.Exists(dataPath))
         {
-            //  Debug.Log("Deirectory does not exist");
-            Directory.CreateDirectory(dataPath);
+           Directory.CreateDirectory(dataPath);
         }
     }
 
@@ -179,27 +180,22 @@ public class SaveFile : MonoBehaviour {
     public void SetSaveName() 
     { 
         saveName = saveNameGO.GetComponent<Text>().text;
-        if (saveName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) {
+        if (saveName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        {
             InvalidCharacters();
         }
     }
 
-    public void InvalidCharacters() {
-        invalidCharPanel.SetActive(true);
-        //char[] invalidFileChars = Path.GetInvalidFileNameChars();
-        //string charlist = new string(invalidFileChars);
-        //Debug.Log("Charlist = " + charlist);
-        //foreach (char thischar in invalidFileChars)
-        //{
-          
-        //    Debug.Log(thischar);
-        //}
+    public void InvalidCharacters()
+    {
+        invalidCharPanel.SetActive(true);        
         Text noticeText = GameObject.Find("Canvas/SavePanel/InvalidCharPanel/NoticeText").GetComponent<Text>();
         noticeText.text = "Your Filename contains one or more invalid characters \n EG " + @": * ? | < > / \ :" + " \" " ;
-            }
+    }
 
-
-    public void SetLoadName(string name) { // set the name of the file to load
+    // set the name of the file to load
+    public void SetLoadName(string name)  
+    { 
         loadName = name.ToString();
         if (dataPath.Contains("Archive"))
         {
@@ -211,15 +207,21 @@ public class SaveFile : MonoBehaviour {
             LoadFile();
         }
     }
-    public void SetLoadedForSignoff() { // set that a submitted plan is loaded for signoff, show the supervison sign off fields.
+
+    // set that a submitted plan is loaded for signoff, show the supervison sign off fields.
+    public void SetLoadedForSignoff()
+    { 
         loadedForSignoff = true;
     }
-    public void SetSavingTemplate() {
+
+    // Set true if the file is being saved as a template.
+    public void SetSavingTemplate()
+    {
         savingTemplate = true;
     }
 
-    public void ShowDeletePanel() // open the delete files panel for the dataPath specified
-  
+    // open the delete files panel for the dataPath specified  
+    public void ShowDeletePanel() 
     {
         ContinuousSaveController.continuousSaveActive = false;
         deletePanel.SetActive(true);
@@ -230,9 +232,10 @@ public class SaveFile : MonoBehaviour {
        
     }
 
-    public void DeleteFile() { // delete the selected file called from deleteconfirmationpanel OK button.
-        ContinuousSaveController.continuousSaveActive = false;
-        // File.Delete(Application.persistentDataPath + "/" + deleteName + ".dat");
+    // delete the selected file called from deleteconfirmationpanel OK button.
+    public void DeleteFile()
+    { 
+        ContinuousSaveController.continuousSaveActive = false;       
         FileInfo fi = new System.IO.FileInfo(dataPath + "/" + deleteName + ".dat");
         UnityEngine.Debug.Log(fi);
         if (fi.Exists)
@@ -250,14 +253,19 @@ public class SaveFile : MonoBehaviour {
         deleteConfirmPanel.SetActive(false);
     }
 
-    public void ShowDeleteFileConfirmation(string file) { // open the delete confirmation panel, called from the selected DeleteFileButton.
+    // open the delete confirmation panel, called from the selected DeleteFileButton.
+    public void ShowDeleteFileConfirmation(string file)
+    {
         deleteConfirmPanel.SetActive(true);
         Text deleteText = GameObject.Find("Canvas/DeletePanel/DeleteConfirmPanel/DeleteFileLabel").GetComponent<Text>();
         deleteText.text = "Would you like to delete the saved file: " + file;
         deleteName = file;
     }
 
-    public void ShowSavePanel() { // activate the saving dialogue panel.
+    // activate the saving dialogue panel, and populate the list of saved files from the data path specified.
+    // calledfrom SaveTempate, and SaveCurrent buttons.
+    public void ShowSavePanel()
+    { 
         ContinuousSaveController.continuousSaveActive = false;
         savePanelGO.gameObject.SetActive(true);
         savecentersnap = FindObjectOfType<SaveFileCenterSnap>();
@@ -270,24 +278,28 @@ public class SaveFile : MonoBehaviour {
         }
        
     }
-    public void DestroySaveList()
-    { // destroy all SavedFileButton objects to allow list to repopulate when called again.
+
+    // destroy all SavedFileButton objects to allow list to repopulate when called again.
+    public void DestroySaveList() 
+    { 
         SavedFileButton[] saveButtons = FindObjectsOfType<SavedFileButton>();
         foreach (SavedFileButton thisButton in saveButtons)
-        {
-            //Debug.Log("Destroying " + thisButton.name);
+        {           
             Destroy(thisButton.gameObject);
         }
     }
 
-    public void ShowLoadPanel() { // activate the load dialogue panel
+    // activate the load dialogue panel
+    public void ShowLoadPanel()
+    { 
         loadPanel.SetActive(true);
         loadcentersnap = FindObjectOfType<LoadFileCenterSnap>();
         StartCoroutine(loadcentersnap.RepopulateList(dataPath));
-        }
-   
+    }
 
-    public void ShowNewSavePanel() {
+    // Show the panel to confirm that file has been saved. called from SavePanel-SaveNewFileButton gameobject.
+    public void ShowNewSavePanel()
+    {
         ContinuousSaveController.continuousSaveActive = false;
         saveName = saveNameGO.GetComponent<Text>().text;
         if (saveNameGO.GetComponent<Text>().text == "" )
@@ -306,45 +318,45 @@ public class SaveFile : MonoBehaviour {
         }
       }
 
-    public void HidePanel() { // hide a panel using the cancel button.
-        
+    // hide a panel using the cancel button. if panel is a subpanel of the gameobject you wish to close, do not use this.
+    public void HidePanel()
+    {       
         EventSystem.current.currentSelectedGameObject.transform.parent.gameObject.SetActive(false);
         loadedForSignoff = false;
         savingTemplate = false;
     }
+
+    // Destroys the currently active panel, use for panels that are called from instatiation. do not use for panels that should be de-activated.
     public void DestroyPanel()
     {
         Destroy(EventSystem.current.currentSelectedGameObject.transform.parent.gameObject);
-
     }
 
-    public void ShowOverwriteSavePanel(string overwriteText) {
-
-        //GameObject.FindObjectOfType<SaveFileCenterSnap>().savePanelShowing = false;
+    // Opens confirmation panel to overwrite and existing saved file.
+    public void ShowOverwriteSavePanel(string overwriteText) {        
         saveName = overwriteText;
         overwriteSavePanel.SetActive(true);
         Text overwriteSaveLabel = GameObject.Find("Canvas/SavePanel/OverwriteSavePanel/OverwriteSaveLabel").GetComponent<Text>();
         overwriteSaveLabel.text = "Would you like to overwrite existing save: " + saveName;
     }
 
-   
-    public void SelectedExistingSave() { // do not need anymore?
-        
-       // saveNameGO = GameObject.Find("Canvas/SavePanel/SaveNameField/");
-        saveName = EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text>().text;
-       
-        saveNameGO.GetComponent<Text>().text = saveName;
-       // Debug.Log("SNGO" + saveNameGO.GetComponent<Text>().text);
+    // do not need anymore?
+    public void SelectedExistingSave()
+    {             
+        saveName = EventSystem.current.currentSelectedGameObject.GetComponentInChildren<Text>().text;       
+        saveNameGO.GetComponent<Text>().text = saveName;       
     }
 
     //public void GetSaves() { //populate save slots with save files.
     //    savedFiles = Directory.GetFiles(dataPath, "*.dat");
     //    // add stuff to populate save slots...
     //}
+
+    // initiate the Co-routine below, should be called form the Submit Plan button.
     public void StartTimeChecks() {
         StartCoroutine(CheckTimes());
     }
-    public IEnumerator CheckTimes() { //checks for forman and supervisor names selected, and any time that is time on, has a time off with it.
+    public IEnumerator CheckTimes() { //checks for foreman and supervisor names selected, and any time that is time on, has a time off with it.
         dropdowns = Resources.FindObjectsOfTypeAll<DropdownID>();
         foreach (DropdownID thisdropdown in dropdowns)
         {
@@ -388,7 +400,8 @@ public class SaveFile : MonoBehaviour {
             }
 
         
-            if (pageController.isEmergency) {
+            if (pageController.isEmergency)
+            {
                 if (thisdropdown.objID == 1) // the foreman dropdown.
                 {
                     if (thisdropdown.GetComponent<Dropdown>().value == 0)
@@ -408,22 +421,21 @@ public class SaveFile : MonoBehaviour {
             }
 
         }
-        
-
 
         times = Resources.FindObjectsOfTypeAll<TimeID>();
-        foreach (TimeID thistime in times) {
+        foreach (TimeID thistime in times)
+        {
             GetTime thisGetTime = thistime.gameObject.GetComponent<GetTime>();
             thisGetTime.isTimeFinished = false;
             thisGetTime.CheckTimeGroup();
             yield return new WaitUntil(() => thisGetTime.isTimeFinished == true);
         }
-
         UnityEngine.Debug.Log("times checked, plan ready to submit");
        StartCoroutine( SubmitPlan());
         
     }
 
+    // Prepare name string of of submitted plan, and call the saving process.
     public IEnumerator SubmitPlan() {
         fileisSaved = false;
         GetArrays();
@@ -433,14 +445,14 @@ public class SaveFile : MonoBehaviour {
             {
                 if (thisdropdown.objID == 15) // the foreman dropdown.
                 {
+                    // Capture the name of the plan preparer to use in file name construction
                     myPrep = thisdropdown.GetComponent<Dropdown>().gameObject.GetComponentInChildren<Text>().text;
                 }
-                if (thisdropdown.objID == 16) {
+                if (thisdropdown.objID == 16)
+                {
+                    //Capture the name of the supervisor and use the initials for file name construction.
                     string str = thisdropdown.GetComponent<Dropdown>().gameObject.GetComponentInChildren<Text>().text;
                     mySup = new String(str.Split(' ').Select(x => x[0]).ToArray());
-                    
-
-
                 }
             }
             if (pageController.isEmergency)
@@ -448,28 +460,27 @@ public class SaveFile : MonoBehaviour {
             {
                 if (thisdropdown.objID == 1)
                 {
+                    // Capture the name of the plan preparer to use in file name construction
                     myPrep = thisdropdown.GetComponent<Dropdown>().gameObject.GetComponentInChildren<Text>().text;
                 }
             }
         }
-         string myDate = System.DateTime.Now.ToString("yyyy-MMM-dd_HH-mm");
-        //string myDate = date[0].GetComponent<Text>().text;
-        //Debug.Log("Supervisor =" + mySup);
+        string myDate = System.DateTime.Now.ToString("yyyy-MMM-dd_HH-mm");
         saveName = mySup +"_" + myDate + "_" + myPrep;
-        if (pageController.isEmergency) {
+        if (pageController.isEmergency)
+        {
             saveName = "Emergency_" + saveName;
         }
         UnityEngine.Debug.Log(dataPath + "/" + saveName);
+
+        // Initiate all the data processing to add to save file, and wait until save is completed.
         Save();
         yield return new WaitUntil(() => fileisSaved == true);
-        UnityEngine.Debug.Log("File should be saved");
-        
+        UnityEngine.Debug.Log("File should be saved");        
         pageController.FinishPage("The job plan " + saveName + " has been submitted" + "\n Please remember to turn on your computer at the end of the day to sync the files.");
-
-        
-        
     }
 
+    // ensure the file was saved successfully.
     public void CheckFileSaved()
     {
         if (File.Exists(dataPath + "/" + saveName + ".dat"))
@@ -484,20 +495,21 @@ public class SaveFile : MonoBehaviour {
     
     }
 
-
+    // prepare all the data to be serialized for saving, and save the file to the specified location with the saveName prepared by SubmitPlan();
     public void Save()
-    { // compile data and save to specified file.
-        GetArrays();
+    { 
+        GetArrays(); // called to initiate all the gameobject arrays to be saved.
+        //Close the SavePanel if file is being saved from that location.
         if (savePanelGO.activeSelf == true)
         {
             GameObject.FindObjectOfType<SaveFileCenterSnap>().savePanelShowing = false;
         }
         BinaryFormatter bf = new BinaryFormatter();
 
+        // dataPath is set from SetDatatPath(string) being called by the various saving / submitting / loading buttons.
         if (!Directory.Exists(dataPath))
         {
             Directory.CreateDirectory(dataPath);
-
         }
         FileStream file = File.Create(dataPath + "/" + saveName + ".dat");
         SaveData data = new SaveData();

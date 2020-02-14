@@ -13,6 +13,9 @@ public class CSEPNumberManager : MonoBehaviour {
    // int currentCSEPNum;
     public Text numberText;
     public Text numberText2;
+    public GameObject setCSEPNumPanel; // The panel for viewing current number or setting it if not issued.
+    public Text currentNumText; // displayed in CSEP set base number panel as currently set number if available.
+    public Button setNewCSEPButton; // sets a new Base CSEP base number when pressed
     
 
     private void Start()
@@ -59,6 +62,8 @@ public class CSEPNumberManager : MonoBehaviour {
             
         }
             PlayerPrefs.SetString(CSEP_BASE_NUMBER, NewNum);
+        currentNumText.text = "Your New Issued CSEP Base Number is " + NewNum;
+        
         
     }
 
@@ -90,6 +95,25 @@ public class CSEPNumberManager : MonoBehaviour {
 
     }
 
-         
+    public void OpenSetCSEPNumPanel()
+    {
+        setCSEPNumPanel.SetActive(true);
+        string currentNUm = GetCSEPBaseNumber();
+        if (currentNUm == "")
+        {
+            currentNumText.text = "Your currently issued CSEP number is not set. PLease press the button to issue a new number.";
+            setNewCSEPButton.gameObject.SetActive(true);
+        }
+        else {
+            currentNumText.text = "Your currently issued CSEP number is " + currentNUm;
+            setNewCSEPButton.gameObject.SetActive(true);
+        }
+        
+    }
+
+    public void CloseSetCSEPNumPanel()
+    {
+        setCSEPNumPanel.SetActive(false);
+    }
    
 }
