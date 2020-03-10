@@ -36,34 +36,18 @@ public class PageController : MonoBehaviour
     public GameObject viewCSEP2Button;    
     public Text myText;
     public GameObject finishSignOffButton;
+    public GameObject trafficLayoutController;
     string username;
-
-
     
-
-
-
-
     // Use this for initialization
     void Start()
-    {   
+    {           
         username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
         UnityEngine.Debug.Log("Username is " + username);
         supervisorSignOff = Resources.FindObjectsOfTypeAll<SignOffID>();
         welcomePanel = GameObject.FindGameObjectWithTag("WelcomePanel");
-        finishPanel = GameObject.FindGameObjectWithTag("FinishPanel");
-        //customLayoutPanel = GameObject.FindGameObjectWithTag("CustomLayoutPanel");
-       // tlpickerPanel = GameObject.FindGameObjectWithTag("TLPickerPanel");
-        finishPanel.SetActive(false);
-        // customLayoutPanel.SetActive(false);
-        // tlpickerPanel.SetActive(false);
-        // pathPanel.SetActive(false);
-        //deviceNum = SystemInfo.deviceName.Substring(SystemInfo.deviceName.Length - 4);
-        //Debug.Log(deviceNum);
-        //guidNum = System.Guid.NewGuid();
-        //Debug.Log(guidNum);
-        //csepPermitText = GameObject.FindGameObjectWithTag("CSEPNumber").GetComponent<Text>();
-        //Debug.Log(csepPermitText.text);
+        finishPanel = GameObject.FindGameObjectWithTag("FinishPanel");     
+        finishPanel.SetActive(false);        
 
         // test if one drive is running on machine //
         //DISABLED FOR DEMO VERSION//
@@ -96,6 +80,7 @@ public class PageController : MonoBehaviour
         //}
         System.GC.Collect();
         ResetForm();
+        trafficLayoutController.SetActive(false);
     }
 
     // called by the Create Emergency Plan button on the weolcome panel. 
@@ -184,6 +169,7 @@ public class PageController : MonoBehaviour
         }
         orgPagePos = pageList[1].transform.position;
         pageIndex = 1;
+        selectedPage = pageList[pageIndex].gameObject;
         if (!SaveFile.loadedFile) // check to see if a job plan was loaded, and reset form if false;
         {
            // Debug.Log("Reset Form was run from create new job plan");
@@ -232,9 +218,25 @@ public class PageController : MonoBehaviour
         pageIndex++;
         //Debug.Log(pageList[pageIndex].name);
         pageList[pageIndex].SetActive(true);
+        selectedPage = pageList[pageIndex].gameObject;
         orgPagePos = pageList[pageIndex].transform.position;
         System.GC.Collect();
+        if (pageList[pageIndex].name == "Page2")
+        {
+            UnityEngine.Debug.Log("Page 2 selected");
+            trafficLayoutController.SetActive(true);
+            SelectLayoutController.layoutControllerInstance.BeginLoadImages("NextPage");
+        }
+        else
+        {
+            if (SelectLayoutController.layoutControllerInstance.isActiveAndEnabled)
+            {
+                SelectLayoutController.layoutControllerInstance.BeginFlushArrays();
+            }
+        }
     }
+
+
 
     // move to the previous page in the form.
     public void BackPage()
@@ -253,9 +255,21 @@ public class PageController : MonoBehaviour
         pageIndex--;
        // Debug.Log(pageList[pageIndex].name);
         pageList[pageIndex].SetActive(true);
+        selectedPage = pageList[pageIndex].gameObject;
         orgPagePos = pageList[pageIndex].transform.position;
         System.GC.Collect();
-
+        if (pageList[pageIndex].name == "Page2")
+        {            
+            trafficLayoutController.SetActive(true);
+            SelectLayoutController.layoutControllerInstance.BeginLoadImages("BackPage");
+        }
+        else
+        {
+            if (SelectLayoutController.layoutControllerInstance.isActiveAndEnabled)
+            {
+                SelectLayoutController.layoutControllerInstance.BeginFlushArrays();
+            }
+        }
 
     }
 

@@ -25,25 +25,19 @@ public class TLPicker : MonoBehaviour
     public static string myLayout;
     public RawImage imageToReceive;
     public bool layoutChosen = false; // test whether a layout has been selected to use.
-
-
+    int numOfTlLayouts;
+    public Texture2D placeHolder;
 
     // Use this for initialization
-    void Start()
+    IEnumerator Start()
     {
-        string sharepointPath = SaveFile.sharepointPath;
-        folderPath = sharepointPath + "/Job Plans/FormData/MTOLayouts";
-        layouts = Directory.GetFiles(folderPath, "*.jpg");
-        foreach (string thisLayout in layouts) {
-            layoutStrings.Add(thisLayout);
-        }
-        layoutStrings.Sort();
-           
+        layouts = SelectLayoutController.layouts;
+        layoutStrings = SelectLayoutController.layoutStrings;
         layoutGO = new GameObject[layouts.Length];
-        //Debug.Log(layoutGO.Length);
         Vector3 spawnPos = transform.position;
-        int i = 0;
-        foreach (string layout in layoutStrings) // create an object for each day in the day list transform.
+        placeHolder = new Texture2D(291,441);
+        placeHolder = (Texture2D)Resources.Load("LoadingPlaceholder");
+        for (int i = 0; i < layoutStrings.Count; i++) // Set the image placeholder while large image is loading in.
         {
             GameObject thisLayout = Instantiate(layoutImage, spawnPos, Quaternion.identity) as GameObject;
             spawnPos = new Vector3(thisLayout.transform.position.x + 30, thisLayout.transform.position.y, thisLayout.transform.position.z);
@@ -51,54 +45,54 @@ public class TLPicker : MonoBehaviour
             myAnchor.anchorMin = new Vector2(0.5f, 0.5f);
             myAnchor.anchorMax = new Vector2(0.5f, 0.5f);
             myAnchor.pivot = new Vector2(0.5f, 0.5f);
-            
             thisLayout.transform.SetParent(imageList.transform);
             thisLayout.transform.localScale = new Vector3(1, 1, 1);
-            
-            thisLayout.name = layout.ToString();
-            //Text myText = thisLayout.GetComponent<Text>();
-            //thisLayout.AddComponent<RawImage>();
-            byte[] myJPG = File.ReadAllBytes(layout);
-            Texture2D myTex = new Texture2D(450, 700);
-            myTex.LoadImage(myJPG);
-            myTex.Apply();
-            thisLayout.GetComponent<RawImage>().texture = myTex;
-            myTex = null;            
+            thisLayout.name = layoutStrings[i].ToString();
+            thisLayout.GetComponent<RawImage>().texture = placeHolder;    // apply the loaded image to the scroll object.                  
             layoutGO[i] = thisLayout.gameObject;
-            myJPG = null;
-            i++;
         }
-        layoutStrings.Clear();
+        if (!SelectLayoutController._layoutsLoaded)
+        {
+            yield return new WaitUntil(() => SelectLayoutController._layoutsLoaded == true);
+        }
+        layouts = SelectLayoutController.layouts;
+        layoutStrings = SelectLayoutController.layoutStrings;
+           
+        
+        //Debug.Log(layoutGO.Length);
+        
+       // create an object for each image in the traffic layout list transform.
+       for(int i = 0; i < layoutStrings.Count ; i++)
+        {
+            //GameObject thisLayout = Instantiate(layoutImage, spawnPos, Quaternion.identity) as GameObject;
+            //spawnPos = new Vector3(thisLayout.transform.position.x + 30, thisLayout.transform.position.y, thisLayout.transform.position.z);
+            //RectTransform myAnchor = thisLayout.GetComponent<RectTransform>();
+            //myAnchor.anchorMin = new Vector2(0.5f, 0.5f);
+            //myAnchor.anchorMax = new Vector2(0.5f, 0.5f);
+            //myAnchor.pivot = new Vector2(0.5f, 0.5f);            
+            //thisLayout.transform.SetParent(imageList.transform);
+            //thisLayout.transform.localScale = new Vector3(1, 1, 1);            
+            //thisLayout.name = layoutStrings[i].ToString();
+            //thisLayout.GetComponent<RawImage>().texture = SelectLayoutController.textureImages[i];    // apply the loaded image to the scroll object.                  
+            //layoutGO[i] = thisLayout.gameObject;
+            layoutGO[i].GetComponent<RawImage>().texture = FindObjectOfType<SelectLayoutController>().textureImages[i];
+        }
         layouts = null;
-
-
         distance = new float[layoutGO.Length];
         distanceReposition = new float[layoutGO.Length];
-
         // Get distance between day GO's in y axis
         int GOlast = layoutGO.Length;
 
-        //int GOsecondLast = layoutGO.Length - 1;
-        // Debug.Log(GOlast + " " + GOsecondLast);
-        //textDistance = (int)Mathf.Abs(layoutGO[1].GetComponent<RectTransform>().anchoredPosition.x - layoutGO[0].GetComponent<RectTransform>().anchoredPosition.x);
-        
-    }
 
-
-   
+    }  
 
     // Update is called once per frame
     void Update()
     {
-
         for (int i = 0; i < layoutGO.Length; i++)
         {
             distanceReposition[i] = center.GetComponent<RectTransform>().position.x - layoutGO[i].GetComponent<RectTransform>().position.x;
-            //distance[i] = Mathf.Abs(center.transform.position.y - layoutGO[i].transform.position.y);
             distance[i] = Mathf.Abs(distanceReposition[i]);
-
-
-
         }
 
         float minDistance = Mathf.Min(distance); // get the minimum distance in the array
@@ -113,12 +107,9 @@ public class TLPicker : MonoBehaviour
 
         if (!dragging)
         {
-            //LerpTolayoutGO(mintextnum * textDistance, 10f);
             LerpTolayoutGO(-layoutGO[mintextnum].GetComponent<RectTransform>().anchoredPosition.x, 10f);
         }
         myLayout = layoutGO[mintextnum].name.ToString();
-
-
     }
 
     void LerpTolayoutGO(float position, float speed)
@@ -160,7 +151,7 @@ public class TLPicker : MonoBehaviour
         //chosenPNG = null;
         //distance = null;
         //distanceReposition = null;
-        Destroy(imageList.gameObject);
+        //Destroy(imageList.gameObject);
         layoutChosen = true;
 
     }
