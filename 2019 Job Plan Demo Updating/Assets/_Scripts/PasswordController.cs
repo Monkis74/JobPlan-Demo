@@ -22,7 +22,7 @@ public class PasswordController : MonoBehaviour
     List<string> passCharacters = new List<string>();
     InputField focusedField;
     InputField previousFocused;
-    string adminPassword = "Sm0k3r";
+    string adminPassword = "xxxxxx";
     string supervisorPassword = "@l3ctr@";
 
     public GameObject enterPassPanel;
